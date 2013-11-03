@@ -34,5 +34,24 @@ class Article_model extends CI_Model {
         }
         return $ret_arr;
     }
+    
+    function getArticleObj($id)
+    {
+        $this->load->database();
+        $query = $this->db->get_where('tb_article', array('id' => $id));
+        $row = $query->result();
+        if (!$row)
+        {
+            return (object)array('no' => 1, 'msg' => '查询结果为空');
+        }
+        else
+        {
+            $ret = $row[0];
+            $ret->no = 0;
+            $ret->timestamp = strtotime($ret->pubdate);
+            //var_dump($ret);
+            return $ret;
+        }
+    }
 }
 ?>
