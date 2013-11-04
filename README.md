@@ -1,4 +1,4 @@
 SenorCMS
 ========
 
-A simple cms, with tag, sort, cache(uses memcached) functions. 
+A simple cms, with tag, sort, category
