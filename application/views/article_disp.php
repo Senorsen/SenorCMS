@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title><?=htmlspecialchars($title)?></title>
+<?=$static->header?>
 
 </head>
 
@@ -15,5 +16,7 @@
             <?=$content?>
         </div>
     </div>
+<?=$static->footer?>
+
 </body>
 </html>

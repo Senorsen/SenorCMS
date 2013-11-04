@@ -24,9 +24,11 @@ class Article_model extends CI_Model {
         $this->load->database();
         $sql = "SELECT `id`,`title`,`author`,`pubdate`,`sort` FROM `tb_article` WHERE `hidden`=0 AND `id` in "
             ."(SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
-            ."(SELECT `id` FROM `tb_category_def` WHERE `short_name`=? ) )"
+            ."(SELECT `category_id` FROM `tb_category_map` WHERE `parent_id` in "
+            ."(SELECT `id` AS `org_id` FROM `tb_category_def` WHERE `short_name`=?) ) or `category_id`=`org_id` )"
             ." LIMIT ?,?";
         $query = $this->db->query($sql, array($category, intval($start), intval($count)));
+        echo $this->db->last_query();
         $ret_arr = array();
         foreach ($query->result() as $row)
         {
