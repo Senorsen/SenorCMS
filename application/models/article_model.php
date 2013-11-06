@@ -26,8 +26,20 @@ class Article_model extends CI_Model {
         $this->load->database();
         $sql = "SELECT `cat_descendants` FROM `tb_category_cache` WHERE `cat_self` in "
             ."(SELECT `id` FROM `tb_category_def` WHERE `short_name`=?)";
-        $r_cache = $this->db->query($sql, array($category))->first_row();
-        $org_ids = $r_cache->cat_descendants;
+        try {
+            $r_cache = $this->db->query($sql, array($category))->first_row();
+            if ($r_cache != false)
+            {
+                $org_ids = $r_cache->cat_descendants;
+            }
+            else
+            {
+                $org_ids = "";
+            }
+        } catch(Exception $e) {
+            $org_ids = "";
+        }
+        if ($org_ids == "") return array();
         $sql = "SELECT `id`,`title`,`author`,`pubdate`,`sort` FROM `tb_article` WHERE `hidden`=0 AND `id` in "
             ."(SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
             ."( $org_ids ) )"
@@ -61,6 +73,8 @@ class Article_model extends CI_Model {
     }
     function cacheCategory()
     {
+        // 以后可以考虑使用MEMORY类型的临时表……
+        // 但现在为了便于调试，暂时使用了MYISAM
         global $cat_tree;
         global $cat_res;
         $this->load->database();

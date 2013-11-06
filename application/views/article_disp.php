@@ -2,21 +2,21 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title><?=htmlspecialchars($title)?></title>
-<?=$static->header?>
+<title><?php echo htmlspecialchars($title);?></title>
+<?php echo $static->header;?>
 
 </head>
 
 <body>
     <div id="article-layer">
-        <div id="article-title"><?=htmlspecialchars($title)?></div>
-        <span id="article-pubdate">发布时间：<?=$pubdate?></span>
-        <span id="article-author">作者： <?=htmlspecialchars($author)?></span>
+        <div id="article-title"><?php echo htmlspecialchars($title);?></div>
+        <span id="article-pubdate">发布时间：<?php echo $pubdate;?></span>
+        <span id="article-author">作者： <?php echo htmlspecialchars($author);?></span>
         <div id="article-content">
-            <?=$content?>
+            <?php echo $content;?>
         </div>
     </div>
-<?=$static->footer?>
+<?php echo $static->footer;?>
 
 </body>
 </html>
