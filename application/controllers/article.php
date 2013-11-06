@@ -35,6 +35,7 @@ class Article extends CI_Controller {
             'static' => $this->static
         ));
     }
+    
     public function disp($id)
     {
         $id = intval($id);
@@ -52,5 +53,11 @@ class Article extends CI_Controller {
         }
         $article->static = $this->static;
         $this->load->view('article_disp', $article);
+    }
+    
+    public function cat_cache()
+    {
+        $this->load->model('article_model');
+        echo $this->article_model->cacheCategory();
     }
 }
