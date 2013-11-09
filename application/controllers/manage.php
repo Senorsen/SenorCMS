@@ -11,7 +11,7 @@ class Manage extends CI_Controller {
         $this->static = (object)array();
     }
     
-    public function publish($id, $is_update_event, $ajax = 0)
+    public function publish($id = 0, $is_update_event = 0, $ajax = 0)
     {
         $this->load->model('user_model');
         $this->load->model('manage_model');
@@ -36,16 +36,46 @@ class Manage extends CI_Controller {
         {
             // 特权足够
             $post = $this->input->post();
+            // 经过思考，还是先做单分类。
+            $category_id = intval($post['category']);
+            if (false === $this->article_model->isCategoryExists(null, $category_id))
+            {
+                if ($ajax)
+                {
+                    echo json_decode(array('no' => 1, 'msg' => '分类不存在'));
+                }
+                else
+                {
+                    $static = $this->static;
+                    $static->title = '错误';
+                    $static->msg = '发表文章失败，因为指定的分类不存在。您可能必须选择一个分类。';
+                    $this->load->view('dochead', $static);
+                    $this->load->view('error', $static);
+                    $this->load->view('docfoot', $static);
+                }
+                return;
+            }
+            $r = $this->manage_model->publishArticle($id, $is_update_event, $category_id, $post['title'], $post['content']);
             if ($ajax)
             {
-                $categories = json_decode($post['categores']);
-                if (!is_array($categories))
-                {
-                    echo json_decode(array('no' => 1, 'msg' => '数据解析失败：categories非数组.'));
-                    exit;
-                }
-                
+                echo json_encode($r);
             }
+            else
+            {
+                if ($r->no != 0)
+                {
+                    $static = $this->static;
+                    $static->title = '错误';
+                    $static->msg = $r->msg;
+                    $this->load->view('dochead', $static);
+                    $this->load->view('error', $static);
+                    $this->load->view('docfoot', $static);
+                }
+                else
+                {
+                    $static = $this->static;
+                    $static->title = $r->title;
+                    
         }
     }     
 }

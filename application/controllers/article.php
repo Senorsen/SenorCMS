@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Article extends CI_Controller {
-    var $article_count = 10;
+    var $article_count = 10, $article_cat_count = 10;
     var $title = 'cmstest';
     var $static;
     
@@ -11,22 +11,32 @@ class Article extends CI_Controller {
         $this->static = (object)array();
     }
     
-	public function displist($start = 0)
+	public function displist($page = 0, $count = -1, $ajax = 0)
 	{
+        if ($count == -1) $count = $this->article_count;
 		$this->load->model('article_model');
-        $list = $this->article_model->getList(intval($start), $this->article_count);
-        $static = $this->static;
-        $static->title = $this->title;
-        $this->load->view('dochead', $static);
-        $this->load->view('article_list', array(
-            'title' => $this->title,
-            'list' => $list
-        ));
-        $this->load->view('docfoot', $static);
+        $list = $this->article_model->getList(intval($page), $this->article_count);
+        if (!$ajax)
+        {
+            $static = $this->static;
+            $static->title = $this->title;
+            $this->load->view('dochead', $static);
+            $this->load->view('article_list', array(
+                'title' => $this->title,
+                'list' => $list
+            ));
+            $this->load->view('docfoot', $static);
+        }
+        else
+        {
+            $r = array('no' => 0, 'msg' => '', 'title' => $this->title, 'list' => $list);
+            echo json_encode($r);
+        }
 	}
     
-    public function category($category, $ajax = 0, $start = 0)
+    public function category($category, $ajax = 0, $page = 0, $count = -1)
     {
+        if ($count == -1) $count = $this->article_cat_count;
         if (!isset($category))
         {
             if (!$ajax)
@@ -45,7 +55,7 @@ class Article extends CI_Controller {
             return;
         }
         $this->load->model('article_model');
-        $list = $this->article_model->getCategoryList(intval($start), $this->article_count, $category);
+        $list = $this->article_model->getCategoryList(intval($page), $count, $category);
         if (!$ajax)
         {
             $static = $this->static;
