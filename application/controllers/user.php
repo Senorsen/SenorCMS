@@ -7,6 +7,7 @@ class User extends CI_Controller {
     {
         parent::__construct();
         $this->static = (object)array();
+        $this->load->helper('url');
     }
     
     public function index()

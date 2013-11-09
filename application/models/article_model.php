@@ -31,13 +31,16 @@ class Article_model extends CI_Model {
     {
         $start = $page * $count;
         $this->load->database();
-        $sql = "SELECT `cat_descendants` FROM `tb_category_cache` WHERE `cat_self` in "
-            ."(SELECT `id` FROM `tb_category_def` WHERE `short_name`=?)";
+        $sql = " SELECT `c`.`cat_descendants`,`d`.`full_name` AS `category_name` FROM `tb_category_cache` AS `c` "
+              ." LEFT JOIN `tb_category_def` AS `d` ON `c`.`cat_self`=`d`.`id` "
+              ." WHERE `c`.`cat_self` in "
+              ." (SELECT `id` FROM `tb_category_def` WHERE `short_name`=?)";
         try {
             $r_cache = $this->db->query($sql, array($category))->first_row();
             if ($r_cache != false)
             {
                 $org_ids = $r_cache->cat_descendants;
+                $category_name = $r_cache->category_name;
             }
             else
             {
@@ -61,7 +64,7 @@ class Article_model extends CI_Model {
         {
             array_push($ret_arr, $row);
         }
-        return $ret_arr;
+        return (object)array('category_name' => $category_name, 'list' =>$ret_arr);
     }
     
     function isCategoryExists($category_short_name, $category_id = 0)

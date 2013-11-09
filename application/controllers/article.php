@@ -2,13 +2,14 @@
 
 class Article extends CI_Controller {
     var $article_count = 10, $article_cat_count = 10;
-    var $title = 'cmstest';
+    var $title = 'SenorCMS';
     var $static;
     
     function __construct()
     {
         parent::__construct();
         $this->static = (object)array();
+        $this->load->helper('url');
     }
     
 	public function displist($page = 0, $count = -1, $ajax = 0)
@@ -55,14 +56,15 @@ class Article extends CI_Controller {
             return;
         }
         $this->load->model('article_model');
-        $list = $this->article_model->getCategoryList(intval($page), $count, $category);
+        $r = $this->article_model->getCategoryList(intval($page), $count, $category);
+        $list = $r->list;
         if (!$ajax)
         {
             $static = $this->static;
-            $static->title = $this->title;
+            $static->title = $r->category_name . ' - ' . $this->title;
             $this->load->view('dochead', $static);
             $this->load->view('article_list', array(
-                'title' => $this->title,
+                'category_name' => $r->category_name,
                 'list' => $list
             ));
             $this->load->view('docfoot', $static);
@@ -72,7 +74,7 @@ class Article extends CI_Controller {
             $json = (object)array(
                 'no' => 0,
                 'msg' => '已读取',
-                'title' => $this->title,
+                'title' =>  $r->category_name. ' - ' . $this->title,
                 'list' => $list
             );
             echo json_encode($json);

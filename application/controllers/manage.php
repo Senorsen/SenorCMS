@@ -9,6 +9,7 @@ class Manage extends CI_Controller {
     {
         parent::__construct();
         $this->static = (object)array();
+        $this->load->helper('url');
     }
     
     public function publish($id = 0, $is_update_event = 0, $ajax = 0)
@@ -73,9 +74,9 @@ class Manage extends CI_Controller {
                 }
                 else
                 {
-                    $static = $this->static;
-                    $static->title = $r->title;
-                    
+                    header("Location: ".$this->load->helper('url')."article/disp/$r->id");
+                }
+            }
         }
     }     
 }
