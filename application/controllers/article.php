@@ -25,47 +25,111 @@ class Article extends CI_Controller {
         $this->load->view('docfoot', $static);
 	}
     
-    public function category($category, $start = 0)
+    public function category($category, $ajax = 0, $start = 0)
     {
-        if (!isset($category)) return;
+        if (!isset($category))
+        {
+            if (!$ajax)
+            {
+                $static = $this->static;
+                $static->title = '错误';
+                $static->msg = 'category未指定';
+                $this->load->view('dochead', $static);
+                $this->load->view('error', $static);
+                $this->load->view('docfoot', $static);
+            }
+            else
+            {
+                echo json_encode(array('no' => 1, 'msg' => 'category未指定'));
+            }
+            return;
+        }
         $this->load->model('article_model');
         $list = $this->article_model->getCategoryList(intval($start), $this->article_count, $category);
-        $static = $this->static;
-        $static->title = $this->title;
-        $this->load->view('dochead', $static);
-        $this->load->view('article_list', array(
-            'title' => $this->title,
-            'list' => $list
-        ));
-        $this->load->view('docfoot', $static);
+        if (!$ajax)
+        {
+            $static = $this->static;
+            $static->title = $this->title;
+            $this->load->view('dochead', $static);
+            $this->load->view('article_list', array(
+                'title' => $this->title,
+                'list' => $list
+            ));
+            $this->load->view('docfoot', $static);
+        }
+        else
+        {
+            $json = (object)array(
+                'no' => 0,
+                'msg' => '已读取',
+                'title' => $this->title,
+                'list' => $list
+            );
+            echo json_encode($json);
+        }
     }
     
-    public function disp($id)
+    public function disp($id, $ajax = 0)
     {
         $id = intval($id);
         if ($id <= 0)
         {
-            $this->load->view('error', array('msg' => '无效的文章id'));
+            if (!$ajax)
+            {
+                $static = $this->static;
+                $static->title = '错误';
+                $static->msg = '无效的文章id';
+                $this->load->view('dochead', $static);
+                $this->load->view('error', $static);
+                $this->load->view('docfoot', $static);
+            }
+            else
+            {
+                echo json_encode(array('no' => 1, 'msg' => '无效的文章id'));
+            }
             return;
         }
         $this->load->model('article_model');
         $article = $this->article_model->getArticleObj($id);
         if ($article->no != 0)
         {
-            $this->load->view('error', array('msg' => $article->msg));
+            if (!$ajax)
+            {
+                $static = $this->static;
+                $static->title = '错误';
+                $static->msg = $article->msg;
+                $this->load->view('dochead', $static);
+                $this->load->view('error', $static);
+                $this->load->view('docfoot', $static);
+            }
+            else
+            {
+                echo json_encode(array('no' => $article->no, 'msg' => $article->msg));
+            }
             return;
         }
-        $static = $this->static;
-        $static->title = $article->title;
-        $this->load->view('dochead', $static);
-        $this->load->view('article_disp', $article);
-        $this->load->view('docfoot', $static);
+        // succeed & display article
+        if (!$ajax)
+        {
+            $static = $this->static;
+            $static->title = $article->title;
+            $this->load->view('dochead', $static);
+            $this->load->view('article_disp', $article);
+            $this->load->view('docfoot', $static);
+        }
+        else
+        {
+            $article->msg = '已读取';
+            echo json_encode($article);
+        }
     }
     
     public function cat_cache()
     {
         $this->load->model('article_model');
-        echo $this->article_model->cacheCategory();
+        echo "开始缓存……\n";
+        echo $this->article_model->cacheCategory()."\n";
+        echo "缓存结束，请检查状态。\n";
     }
 }
 ?>

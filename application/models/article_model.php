@@ -40,11 +40,11 @@ class Article_model extends CI_Model {
             $org_ids = "";
         }
         if ($org_ids == "") return array();
-        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`, `u`.`username` AS `author` "
+        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`,`a`.`author` AS `author_id` "
               ." FROM `tb_article` AS `a` LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` "
               ." WHERE (`a`.`hidden`=0 or `a`.`hidden`=?) AND `a`.`id` in /* A MUST GO AHEAD */"
               ." (SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
-              ." ( $org_ids ) ) LIMIT ?,? ";
+              ." ( $org_ids ) ) GROUP BY `a`.`id` ORDER BY `a`.`id` DESC LIMIT ?,? ";
         $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
         $ret_arr = array();
         foreach ($query->result() as $row)
