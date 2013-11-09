@@ -12,16 +12,16 @@ class Manage extends CI_Controller {
         $this->load->helper('url');
     }
     
-    public function publish($id = 0, $is_update_event = 0, $ajax = 0)
+    public function publish_submit($id = 0, $is_update_event = 0, $ajax = 0)
     {
         $this->load->model('user_model');
         $this->load->model('manage_model');
         $this->load->model('article_model');
-        if (false === $this->user_model->checkUser($this->$publish_priviledge))
+        if (false === $this->user_model->checkUser($this->publish_priviledge))
         {
             if ($ajax)
             {
-                echo json_decode(array('no' => 1, 'msg' => '越权请求'));
+                echo json_encode(array('no' => 1, 'msg' => '越权请求'));
             }
             else
             {
@@ -43,7 +43,7 @@ class Manage extends CI_Controller {
             {
                 if ($ajax)
                 {
-                    echo json_decode(array('no' => 1, 'msg' => '分类不存在'));
+                    echo json_encode(array('no' => 1, 'msg' => '分类不存在'));
                 }
                 else
                 {
@@ -56,7 +56,7 @@ class Manage extends CI_Controller {
                 }
                 return;
             }
-            $r = $this->manage_model->publishArticle($id, $is_update_event, $category_id, $post['title'], $post['content']);
+            $r = $this->manage_model->publishArticle($id, $is_update_event, $category_id, $post['title'], $post['content'], intval($post['hidden']));
             if ($ajax)
             {
                 echo json_encode($r);
@@ -78,6 +78,12 @@ class Manage extends CI_Controller {
                 }
             }
         }
-    }     
+    }
+    
+    public function publish()
+    {
+        // 只需要列出列表和编辑器即可
+        
+    }
 }
 ?>

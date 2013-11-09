@@ -26,7 +26,7 @@ class User_model extends CI_Model {
         }
         else
         {
-            $user_session_arr = $this->session->userdata($this->user_session_key);
+            $user_session_arr = $loginstate;
             if (($lret = validateLogin($user_session_arr->username, $user_session_arr->password, true)->no) == 0)
             {
                 if ($lret->priviledge < $required_priviledge)
@@ -69,7 +69,7 @@ class User_model extends CI_Model {
                     'id' => $row->id,
                     'username' => $row->username,
                     'password' => $row->password,
-                    'priviledge' => $row->previledge
+                    'priviledge' => $row->priviledge
                 );
                 $this->session->set_userdata($this->user_session_key, $user_session_arr);
             }
