@@ -1,13 +1,3 @@
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title><?php echo $title;?></title>
-<?php echo $static->header;?>
-
-</head>
-
-<body>
     <table>
 <?php
     foreach ($list as $value)
@@ -23,7 +13,3 @@
     }
 ?>
     </table>
-<?php echo $static->footer;?>
-
-</body>
-</html>

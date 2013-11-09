@@ -21,7 +21,7 @@ class Article_model extends CI_Model {
         return $ret_arr;
     }
     
-    function getCategoryList($start, $count, $category)
+    function getCategoryList($start, $count, $category, $show_hidden = 0)
     {
         $this->load->database();
         $sql = "SELECT `cat_descendants` FROM `tb_category_cache` WHERE `cat_self` in "
@@ -40,11 +40,12 @@ class Article_model extends CI_Model {
             $org_ids = "";
         }
         if ($org_ids == "") return array();
-        $sql = "SELECT `id`,`title`,`author`,`pubdate`,`sort` FROM `tb_article` WHERE `hidden`=0 AND `id` in "
-            ."(SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
-            ."( $org_ids ) )"
-            ." LIMIT ?,?";
-        $query = $this->db->query($sql, array(intval($start), intval($count)));
+        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`, `u`.`username` AS `author` "
+              ." FROM `tb_article` AS `a` LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` "
+              ." WHERE (`a`.`hidden`=0 or `a`.`hidden`=?) AND `a`.`id` in /* A MUST GO AHEAD */"
+              ." (SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
+              ." ( $org_ids ) ) LIMIT ?,? ";
+        $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
         $ret_arr = array();
         foreach ($query->result() as $row)
         {

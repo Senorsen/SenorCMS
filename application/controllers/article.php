@@ -2,26 +2,27 @@
 
 class Article extends CI_Controller {
     var $article_count = 10;
-    var $view = '', $title = 'cmstest';
-    var $footer, $header, $static;
+    var $title = 'cmstest';
+    var $static;
     
     function __construct()
     {
         parent::__construct();
-        $this->footer = file_get_contents('footer.html');
-        $this->header = file_get_contents('header.html');
-        $this->static = (object)array('header' => $this->header, 'footer' => $this->footer);
+        $this->static = (object)array();
     }
     
 	public function displist($start = 0)
 	{
 		$this->load->model('article_model');
         $list = $this->article_model->getList(intval($start), $this->article_count);
+        $static = $this->static;
+        $static->title = $this->title;
+        $this->load->view('dochead', $static);
         $this->load->view('article_list', array(
             'title' => $this->title,
-            'list' => $list,
-            'static' => $this->static
+            'list' => $list
         ));
+        $this->load->view('docfoot', $static);
 	}
     
     public function category($category, $start = 0)
@@ -29,11 +30,14 @@ class Article extends CI_Controller {
         if (!isset($category)) return;
         $this->load->model('article_model');
         $list = $this->article_model->getCategoryList(intval($start), $this->article_count, $category);
+        $static = $this->static;
+        $static->title = $this->title;
+        $this->load->view('dochead', $static);
         $this->load->view('article_list', array(
             'title' => $this->title,
-            'list' => $list,
-            'static' => $this->static
+            'list' => $list
         ));
+        $this->load->view('docfoot', $static);
     }
     
     public function disp($id)
@@ -51,8 +55,11 @@ class Article extends CI_Controller {
             $this->load->view('error', array('msg' => $article->msg));
             return;
         }
-        $article->static = $this->static;
+        $static = $this->static;
+        $static->title = $article->title;
+        $this->load->view('dochead', $static);
         $this->load->view('article_disp', $article);
+        $this->load->view('docfoot', $static);
     }
     
     public function cat_cache()
@@ -61,3 +68,4 @@ class Article extends CI_Controller {
         echo $this->article_model->cacheCategory();
     }
 }
+?>
