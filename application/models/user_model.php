@@ -19,6 +19,7 @@ class User_model extends CI_Model {
     function checkUser($required_priviledge = 0)
     {
         $this->load->library('session');
+        var_dump($this->session->all_userdata());
         $loginstate = $this->session->userdata($this->user_session_key);
         if ($loginstate === false)
         {
@@ -26,8 +27,7 @@ class User_model extends CI_Model {
         }
         else
         {
-            $user_session_arr = 
-            $loginstate;
+            $user_session_arr = $loginstate;
             if (($lret = validateLogin($user_session_arr->username, $user_session_arr->password, true)->no) == 0)
             {
                 if ($lret->priviledge < $required_priviledge)
@@ -73,6 +73,8 @@ class User_model extends CI_Model {
                     'priviledge' => $row->priviledge
                 );
                 $this->session->set_userdata($this->user_session_key, $user_session_arr);
+                var_dump($this->session->all_userdata());
+                exit;
             }
             $ret = array(
                 'no' => 0,
