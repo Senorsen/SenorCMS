@@ -58,6 +58,7 @@ class Article_model extends CI_Model {
               ." WHERE (`a`.`hidden`=0 or `a`.`hidden`<=?) AND `a`.`id` in /* A MUST GO AHEAD */ "
               ." (SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
               ." ( $org_ids ) ) GROUP BY `a`.`id` ORDER BY `a`.`id` DESC LIMIT ?,? ";
+        //$sql = "SELECT a.id, a.title, a.pubdate, a.sort, u.username AS author, a.author AS author_id, l.category_id, d.short_name, d.full_name FROM tb_article AS a, tb_user AS u, tb_category_link AS l, tb_category_def AS d WHERE a.hidden<=? AND a.id=";
         $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
         $ret_arr = array();
         foreach ($query->result() as $row)

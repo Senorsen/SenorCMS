@@ -26,7 +26,8 @@ class User_model extends CI_Model {
         }
         else
         {
-            $user_session_arr = $loginstate;
+            $user_session_arr = 
+            $loginstate;
             if (($lret = validateLogin($user_session_arr->username, $user_session_arr->password, true)->no) == 0)
             {
                 if ($lret->priviledge < $required_priviledge)
