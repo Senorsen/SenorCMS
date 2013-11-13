@@ -10,6 +10,7 @@ class Manage extends CI_Controller {
         parent::__construct();
         $this->static = (object)array();
         $this->load->helper('url');
+        $this->load->library('session');
     }
     
     public function publish_submit($id = 0, $is_update_event = 0, $ajax = 0)
@@ -17,7 +18,8 @@ class Manage extends CI_Controller {
         $this->load->model('user_model');
         $this->load->model('manage_model');
         $this->load->model('article_model');
-        if (false === $this->user_model->checkUser($this->publish_priviledge))
+        $checkuser_ret = $this->user_model->checkUser($this->publish_priviledge);
+        if (false === $checkuser_ret)
         {
             if ($ajax)
             {
@@ -56,7 +58,7 @@ class Manage extends CI_Controller {
                 }
                 return;
             }
-            $r = $this->manage_model->publishArticle($id, $is_update_event, $category_id, $post['title'], $post['content'], intval($post['hidden']));
+            $r = $this->manage_model->publishArticle($checkuser_ret->uid, $id, $is_update_event, $category_id, $post['title'], $post['content'], intval($post['hidden']));
             if ($ajax)
             {
                 echo json_encode($r);

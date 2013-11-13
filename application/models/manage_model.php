@@ -6,7 +6,7 @@ class Manage_model extends CI_Model {
         parent::__construct();
     }
     
-    function publishArticle($id, $is_update_event, $category_id, $title, $content, $hidden)
+    function publishArticle($uid, $id, $is_update_event, $category_id, $title, $content, $hidden)
     {
         $this->load->database();
         if ($is_update_event)
@@ -19,7 +19,7 @@ class Manage_model extends CI_Model {
             }
             $id = $r_id->id;
             $sql = "UPDATE `tb_article` SET `title`=?,`content`=?,`hidden`=? WHERE `id`=?";
-            $this->db->query($sql, array($title, $content,$hidden , $id));
+            $this->db->query($sql, array($title, $content, $hidden , $id));
             if ($this->db->affected_rows() != 1)
             {
                 return (object)array('no' => 1, 'msg' => '更新文章失败');
@@ -34,9 +34,9 @@ class Manage_model extends CI_Model {
         }
         else
         {
-            $sql = " INSERT INTO `tb_article` (`title`,`content`,`hidden`,`pubdate`,`click_count`) "
-                  ." VALUES(?,?,?,NOW(),0) ";
-            $this->db->query($sql, array($title, $content, $hidden));
+            $sql = " INSERT INTO `tb_article` (`uid`,`title`,`content`,`hidden`,`pubdate`,`click_count`) "
+                  ." VALUES(?,?,?,?,NOW(),0) ";
+            $this->db->query($sql, array($uid, $title, $content, $hidden));
             if ($this->db->affected_rows() != 1)
             {
                 return (object)array('no' => 1, 'msg' => '新建文章失败');

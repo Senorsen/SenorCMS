@@ -10,6 +10,7 @@ class Article extends CI_Controller {
         parent::__construct();
         $this->static = (object)array();
         $this->load->helper('url');
+        $this->load->library('session');
     }
     
 	public function displist($page = 0, $count = -1, $ajax = 0)
@@ -35,8 +36,9 @@ class Article extends CI_Controller {
         }
 	}
     
-    public function category($category, $ajax = 0, $page = 0, $count = -1)
+    public function category($category, $page = 0, $count = -1, $ajax = 0)
     {
+        if ($category == 'all') return $this->displist($page, $count, $ajax);
         if ($count == -1) $count = $this->article_cat_count;
         if (!isset($category))
         {

@@ -17,7 +17,7 @@ class Article_model extends CI_Model {
               ." FROM `tb_article` AS `a` LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` "
               ." LEFT JOIN `tb_category_link` AS `l` ON `l`.`article_id`=`a`.`id` "
               ." LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id` "
-              ." WHERE (`a`.`hidden`=0 or `a`.`hidden`<=?) ORDER BY `a`.`id` DESC LIMIT ?,? ";
+              ." WHERE (`a`.`hidden`<=?) ORDER BY `a`.`id` DESC LIMIT ?,? ";
         $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
         $ret_arr = array();
         foreach ($query->result() as $row)
@@ -75,8 +75,8 @@ class Article_model extends CI_Model {
             $category_short_name = '';
         }
         $this->load->database();
-        $sql = "SELECT `id`,`short_name` FROM `tb_category_def` WHERE (`id`=? OR `short_name`=?) AND (`hidden`=0)";
-        $row = $this->db->query($sql, array(intval($category_id), $category_short_name))->firstrow();
+        $sql = "SELECT `id`,`short_name` FROM `tb_category_def` WHERE (`id`=? OR `short_name`=?)";
+        $row = $this->db->query($sql, array(intval($category_id), $category_short_name))->first_row();
         if ($row == false || count($row) == 0)
         {
             return false;

@@ -18,31 +18,34 @@ class User_model extends CI_Model {
     
     function checkUser($required_priviledge = 0)
     {
-        $this->load->library('session');
-        var_dump($this->session->all_userdata());
+        //var_dump($this->session->all_userdata());
         $loginstate = $this->session->userdata($this->user_session_key);
+        //var_dump($loginstate);
         if ($loginstate === false)
         {
             $ret = false;
         }
         else
         {
-            $user_session_arr = $loginstate;
-            if (($lret = validateLogin($user_session_arr->username, $user_session_arr->password, true)->no) == 0)
+            $user_session_arr = (object)$loginstate;
+            $lret = $this->validateLogin($user_session_arr->username, $user_session_arr->password, true);
+            if ($lret->no == 0)
             {
                 if ($lret->priviledge < $required_priviledge)
                 {
                     $ret = false;
+                    //echo '权限不够';
                 }
                 else
                 {
-                    $ret = (object)array('id' => $lret->id, 'username' => $lret->username, 'priviledge' => $lret->priviledge);
+                    $ret = (object)array('uid' => $lret->id, 'username' => $lret->username, 'priviledge' => $lret->priviledge);
                 }
             }
             else
             {
                 $ret = false;
                 $this->session->unset_userdata($this->user_session_key);
+                //echo 'Expired';
             }
         }
         return $ret;
@@ -50,13 +53,10 @@ class User_model extends CI_Model {
     
     function validateLogin($username, $password, $inner_call = false)
     {
-        if (!$inner_call)
-        {
-            $this->load->library('session');
-        }
         $this->load->database();
-        $sql = "SELECT `priviledge`,`username`,`id`,`password` FROM `tb_user` WHERE `username`=? AND `password`=? AND `hidden`=0";
-        $row = $this->db->query($sql, array($username, $this->saltPassword($username, $password)))->first_row();
+        $sql = "SELECT * FROM `tb_user` WHERE `username`=? AND `password`=? AND `hidden`=0";
+        if (!$inner_call) $password = $this->saltPassword($username, $password);
+        $row = $this->db->query($sql, array($username, $password))->first_row();
         $ret = array();
         if ($row == false || count($row) == 0)
         {
@@ -73,18 +73,23 @@ class User_model extends CI_Model {
                     'priviledge' => $row->priviledge
                 );
                 $this->session->set_userdata($this->user_session_key, $user_session_arr);
-                var_dump($this->session->all_userdata());
-                exit;
+                //var_dump($this->session->all_userdata());
+                //exit;
             }
             $ret = array(
                 'no' => 0,
                 'msg' => '成功登录',
                 'id' => $row->id,
                 'username' => $row->username,
-                'previledge' => $row->previledge
+                'priviledge' => $row->priviledge
             );
         }
         return (object)$ret;
+    }
+    
+    function userLogout()
+    {
+        
     }
     
     function registerNewUser($username, $password, $ip)

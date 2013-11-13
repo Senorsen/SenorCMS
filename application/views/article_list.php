@@ -1,17 +1,18 @@
-    <table>
+    <div id="list-layer">
+        <div id="list-layer-i">
 <?php
     foreach ($list as $value)
     {
 ?>
-        <tr>
-            <td><?php echo $value->id;?></td>
-            <td><a href="<?php echo base_url();?>article/disp/<?php echo $value->id;?>" target="_blank"><?php echo htmlspecialchars($value->title);?></td></td>
-            <td><?php echo htmlspecialchars($value->author);?></td>
-            <td><?php echo $value->pubdate;?></td>
-            <td><?php echo $value->sort;?></td>
-            <td><?php echo $value->full_name?></td>
-        </tr>
+        <div id="list-article-<?php echo $value->id;?>" class="article-button" data-r="-<?php echo 50+abs(53-10*$value->id);?>px">
+            <span class="a-layer font-hei"><a href="<?php echo base_url();?>article/disp/<?php echo $value->id;?>" id="article-a-<?php echo $value->id;?>" class="article-a-button font-hei" target="_blank"><?php echo htmlspecialchars($value->title);?></a></span>
+            <span class="author-layer font-hei"><?php echo htmlspecialchars($value->author);?></span>
+            <!--<span><?php echo $value->pubdate;?></span>-->
+            <!--<td><?php echo $value->sort;?></td>-->
+            <span class="cat-layer font-hei"><?php echo $value->full_name?></span>
+        </div>
 <?php
     }
 ?>
-    </table>
+        </div>
+    </div>
