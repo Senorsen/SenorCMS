@@ -13,6 +13,11 @@ class Article extends CI_Controller {
         $this->load->library('session');
     }
     
+    public function index()
+    {
+        $this->displist();
+    }
+    
 	public function displist($page = 0, $count = -1, $ajax = 0)
 	{
         if ($count == -1) $count = $this->article_count;

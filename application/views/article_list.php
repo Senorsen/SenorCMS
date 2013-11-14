@@ -1,5 +1,5 @@
-    <div id="list-layer">
-        <div id="list-layer-i">
+    <div id="list-layer" class="list-layer">
+        <div id="list-layer-i" class="list-layer-i">
 <?php
     foreach ($list as $value)
     {

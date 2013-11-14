@@ -15,7 +15,7 @@ body {
     padding: 0;
 }
 
-#list-layer {
+.list-layer {
     display: block;
     position: absolute;
     overflow: hidden;
@@ -25,7 +25,7 @@ body {
     right: @list-layer-right;
 }
 
-#list-layer-i {
+.list-layer-i {
     position: relative;
     height: 100%;
     margin-top: 100px;
@@ -66,7 +66,7 @@ body {
         font-size: 18px;
     }
     .author-layer {
-        left: 30px;
+        left: 40px;
         bottom: 25px;
         font-size: 14px;
     }
@@ -78,6 +78,13 @@ body {
 }
 
 .article-button:hover {
+    margin-top: 18px;
+    margin-bottom: 5px;
+/*    width: @article-width-hover;
+    left: @article-width - @article-width-hover; */
+}
+
+.article-button.selected {
     margin-top: 18px;
     margin-bottom: 5px;
 /*    width: @article-width-hover;

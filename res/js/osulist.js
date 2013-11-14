@@ -1,22 +1,23 @@
 
-function c_osulist()
+function c_osulist($list_obj)
 {
+    this.$list_obj = $list_obj;
     this.initListLayer();
-    this.refreshView($('body'));
+    this.refreshView($list_obj);
 };
 c_osulist.prototype = {
     is_on_scroll: 0
 };
 c_osulist.prototype.initListLayer = function() {
     var _this = this;
-    $('#list-layer').on('mousemove', function(e) {
+    this.$list_obj.on('mousemove', function(e) {
         var rel_top = e.pageY-$('body').scrollTop()
         console.log(e.pageX+' '+rel_top);
-        if (rel_top <= $(window).height() * 0.4) _this.scrollUp(this);
-        else if (rel_top >=  $(window).height() * 0.6) _this.scrollDown(this);
+        if (rel_top <= $(window).height() * 0.2) _this.scrollUp(this);
+        else if (rel_top >=  $(window).height() * 0.8) _this.scrollDown(this);
         else _this.scrollStop(this);
     });
-    $('#list-layer').mouseleave(function() {
+    this.$list_obj.mouseleave(function() {
         _this.scrollStop(this);
     });
 }
