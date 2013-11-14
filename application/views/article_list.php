@@ -16,3 +16,7 @@
 ?>
         </div>
     </div>
+<!-- data start -->
+<script language="javascript">
+    var PageData = <?php echo json_encode($list);?>;
+</script>
