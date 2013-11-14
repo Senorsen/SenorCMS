@@ -4,7 +4,7 @@
     foreach ($list as $value)
     {
 ?>
-        <div id="list-article-<?php echo $value->id;?>" class="article-button" data-r="-<?php echo 50+abs(53-10*$value->id);?>px">
+        <div id="list-article-<?php echo $value->id;?>" class="article-button" style="right: -200px">
             <span class="a-layer font-hei"><a href="<?php echo base_url();?>article/disp/<?php echo $value->id;?>" id="article-a-<?php echo $value->id;?>" class="article-a-button font-hei" target="_blank"><?php echo htmlspecialchars($value->title);?></a></span>
             <span class="author-layer font-hei"><?php echo htmlspecialchars($value->author);?></span>
             <!--<span><?php echo $value->pubdate;?></span>-->
