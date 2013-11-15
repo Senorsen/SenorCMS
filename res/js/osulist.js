@@ -5,7 +5,7 @@ function c_osulist($list_obj)
     this.calcPosxArray(this.scrHeight);
     this.$list_obj = $list_obj;
     this.initListLayer();
-    this.refreshView($list_obj);
+    this.refreshView(this.$list_obj);
 };
 c_osulist.prototype = {
     is_on_scroll: 0,
@@ -19,15 +19,17 @@ c_osulist.prototype.initListLayer = function() {
         if (rel_top <= $(window).height() * 0.2) _this.scrollUp(this);
         else if (rel_top >=  $(window).height() * 0.8) _this.scrollDown(this);
         else _this.scrollStop(this);
-    });
-    this.$list_obj.mouseleave(function() {
+    }).mouseleave(function() {
         _this.scrollStop(this);
+    }).mousewheel(function(event, delta, deltaX, deltaY) {
+        //console.log(delta, deltaX, deltaY);
+        $(this).scrollTop($(this).scrollTop() - deltaY * 50);
     });
     this.$list_obj.find('.article-button').click(function(e) {
         e.stopPropagation();
         e.preventDefault();
-        
     });
+    this.arrangePosx(this.$list_obj.find('.article-button'));
 }
 c_osulist.prototype.scrollStop = function(o) {
     console.log('scrollStop');
@@ -39,7 +41,9 @@ c_osulist.prototype.scrollUp = function(o, _innercall) {
     if (this.is_on_scroll && !_innercall) return;
     //console.log('scrollUp');
     this.is_on_scroll = -1;
-    $(o).animate({scrollTop: '-=100px'}, 800, "linear", function() {
+    var $ab_o = $(o).find('.article-button');
+    $(o).animate({scrollTop: '-=10px'}, 80, "linear", function() {
+        _this.arrangePosx($ab_o);
         if ($(this).scrollTop() <= 0)
         {
             _this.scrollStop(this);
@@ -53,7 +57,9 @@ c_osulist.prototype.scrollDown = function(o, _innercall) {
     if (this.is_on_scroll && !_innercall) return;
     //console.log('scrollDown');
     this.is_on_scroll = 1;
-    $(o).animate({scrollTop: '+=100px'}, 800, "linear", function() {
+    var $ab_o = $(o).find('.article-button');
+    $(o).animate({scrollTop: '+=10px'}, 80, "linear", function() {
+        _this.arrangePosx($ab_o);
         if ($(this).scrollTop() >= $(this).height()-$(window).height())
         {
             _this.scrollStop(this);
@@ -68,13 +74,18 @@ c_osulist.prototype.refreshView = function($o) {
     $ab_o.hover(function() {
         //console.log(this.id+' hover');
         $(this).addClass('hov').stop(true, false).animate({right: -5}, 200, "swing");
+        _this.arrangePosx($ab_o);
     }, function() {
         //console.log(this.id+' hout');
+        $(this).removeClass('hov');
+        _this.arrangePosx($ab_o);
         $(this).stop(true, false).animate({right: _this.posx[$(this).offset().top]}, 150, "swing", function() {
-            $(this).removeClass('hov');
+            
+            _this.arrangePosx($ab_o);
         });
     });
     if (this.refresh_view_intvid != -1) clearInterval(this.refresh_view_intvid);
+    return;
     this.refresh_view_intvid = setInterval(function() {
         $ab_o.each(function() {
             var $t = $(this);
@@ -87,6 +98,19 @@ c_osulist.prototype.refreshView = function($o) {
             }
         });
     }, 200);
+};
+c_osulist.prototype.arrangePosx = function($ab_o) {
+    var _this = this;
+    $ab_o.each(function() {
+        var $t = $(this);
+        if (!$t.hasClass('hov') && typeof _this.posx[$t.offset().top] != 'undefined')
+        {
+            if (parseInt($t.css('right')) == parseInt(_this.posx[$t.offset().top])) return;
+            //console.log(this.id+' dong '+parseInt($t.css('right'))+' '+parseInt(_this.posx[$t.offset().top]));
+            //console.log($t.offset().top+' '+_this.posx[$t.offset().top]);
+            $t.stop(true, false).animate({right: _this.posx[$t.offset().top]}, 200);
+        }
+    });
 };
 c_osulist.prototype.calcPosxArray = function(scrHeight) {
     console.log('scrHeight = ' + scrHeight.toString());
@@ -105,4 +129,4 @@ c_osulist.prototype.calcPosxArray = function(scrHeight) {
         posx[parseInt(scrHeight / 2 - rel_h - scrHeight * 0.05)] = -180 + ellipseW * Math.cos(t);
     }
     this.posx = posx;
-}
+};
