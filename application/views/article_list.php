@@ -1,5 +1,9 @@
+    <div id="top-layer">
+        
+    </div>
     <div id="list-layer" class="list-layer">
         <div id="list-layer-i" class="list-layer-i">
+<!-- Article inner listlayer content start - Senorsen capture -->
 <?php
     foreach ($list as $value)
     {
@@ -14,6 +18,7 @@
 <?php
     }
 ?>
+<!-- Article inner listlayer content end - Senorsen capture -->
         </div>
     </div>
     <div id="article-layer" class="article-layer">
@@ -24,3 +29,4 @@
         <div id="preview-layer-i" class="preview-layer-i">
         </div>
     </div>
+    

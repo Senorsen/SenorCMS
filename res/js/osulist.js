@@ -10,14 +10,16 @@ function c_osulist($list_obj)
 c_osulist.prototype = {
     is_on_scroll: 0,
     refresh_view_intvid: -1,
-    sel_callback: function() {}
+    sel_callback: function() {},
+    on_important_scroll: false,
+    on_sel: false
 };
 c_osulist.prototype.initListLayer = function() {
     var _this = this;
     this.$list_obj.on('mousemove', function(e) {
         var rel_top = e.pageY-$('body').scrollTop()
-        if (rel_top <= $(window).height() * 0.25) _this.scrollUp(this);
-        else if (rel_top >=  $(window).height() * 0.75) _this.scrollDown(this);
+        if (rel_top <= $(window).height() * 0.15) _this.scrollUp(this);
+        else if (rel_top >=  $(window).height() * 0.85) _this.scrollDown(this);
         else _this.scrollStop(this);
     }).mouseleave(function() {
         _this.scrollStop(this);
@@ -28,7 +30,7 @@ c_osulist.prototype.initListLayer = function() {
 c_osulist.prototype.scrollStop = function(o) {
     console.log('scrollStop');
     this.is_on_scroll = 0;
-    $(o).stop(true, false);
+    //$(o).stop(true, false);
 }
 c_osulist.prototype.scrollUp = function(o, _innercall) {
     var _this = this;
@@ -60,18 +62,45 @@ c_osulist.prototype.refreshView = function($o) {
     var _this = this;
     var $ab_o = $o.find('.article-button');
     $ab_o.hover(function() {
-        $(this).addClass('hov').stop(true, false).animate({right: -10}, 200, "swing");
+        if ($(this).hasClass('onsel')) return;
+        if (!_this.on_sel)
+        {
+            $(this).removeClass('hov').stop(true, false).animate({right: -50}, 200, "swing");
+        }
+        else
+        {
+            $(this).removeClass('hov').stop(true, false).animate({right: -100}, 200, "swing");
+        }
     }, function() {
-        $(this).removeClass('hov').stop(true, false).animate({right: -60}, 200, "swing");
+        if ($(this).hasClass('onsel')) return;
+        if (!_this.on_sel)
+        {
+            $(this).removeClass('hov').stop(true, false).animate({right: -100}, 200, "swing");
+        }
+        else
+        {
+            $(this).removeClass('hov').stop(true, false).animate({right: -160}, 200, "swing");
+        }
     }).click(function(e) {
         e.stopPropagation();
         e.preventDefault();
-        $(this).addClass('ondisp');
+        _this.on_sel = true;
+        var this_button_id = this.id;
+        $ab_o.each(function() {
+            if (this.id != this_button_id)
+            {
+                $(this).removeClass('onsel').animate({right: -160});
+            }
+        });
+        console.log($o.scrollTop()+' '+$(this).offset().top);
+        $(this).addClass('onsel').animate({right: -40});
+        $o.animate({scrollTop: $(this).offset().top},400);
         _this.sel_callback(JSON.parse(decodeURIComponent($(this).attr('x-dataarea-json'))));
-    }).animate({right: -60}, 60);
+    }).animate({right: -100}, 60);
 };
 c_osulist.prototype.setCallback = function(callback) {
     this.sel_callback = callback;
 }
-
+c_osulist.prototype.addList = function(obj) {
     
+}
