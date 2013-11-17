@@ -22,7 +22,7 @@ class Article extends CI_Controller {
 	{
         if ($count == -1) $count = $this->article_count;
 		$this->load->model('article_model');
-        $list = $this->article_model->getList(intval($page), $this->article_count);
+        $list = $this->article_model->getList(intval($page), $count);
         if (!$ajax)
         {
             $static = $this->static;

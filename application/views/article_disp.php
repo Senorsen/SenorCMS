@@ -7,3 +7,6 @@
             <?php echo $content;?>
         </div>
     </div>
+    <script>
+        location.href = '<?php echo base_url();?>/#!Article/<?php echo $id;?>';
+    </script>
