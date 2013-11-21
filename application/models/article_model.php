@@ -7,23 +7,32 @@ class Article_model extends CI_Model {
     {
         parent::__construct();
     }
-    
+
     function getList($page, $count, $show_hidden = 0)
     {
         $start = $page * $count;
         $this->load->database();
-        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`, "
-              ." `a`.`author` AS `author_id`, `l`.`category_id`,`d`.`short_name`,`d`.`full_name` "
-              ." FROM `tb_article` AS `a` LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` "
-              ." LEFT JOIN `tb_category_link` AS `l` ON `l`.`article_id`=`a`.`id` "
-              ." LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id` "
-              ." WHERE (`a`.`hidden`<=?) ORDER BY `a`.`id` DESC LIMIT ?,? ";
-        $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
-        $ret_arr = array();
-        foreach ($query->result() as $row)
-        {
-            array_push($ret_arr, $row);
-        }
+        $sql = "SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`, `a`.`author` AS `author_id`,
+                       `l`.`category_id`, `d`.`short_name`, `d`.`full_name`
+                FROM `tb_article` AS `a`
+                  LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id`
+                  LEFT JOIN `tb_category_link` AS `l` ON `l`.`article_id`=`a`.`id`
+                  LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id`
+                WHERE (`a`.`hidden`<=?)
+                ORDER BY `a`.`id` DESC LIMIT ?,? ";
+                
+        $query = $this->db->select('article.id, article.title, article.pubdate, article.sort,
+                                    user.username AS author_name,
+                                    category_link.category_id, category_def.short_name, category_def.full_name')
+                            ->join('user', 'article.author=user.id', 'left')
+                            ->join('category_link', 'category_link.article_id=article.id', 'left')
+                            ->join('category_def', 'category_link.category_id=category_def.id', 'left')
+                           ->where('article.hidden <=', $show_hidden?1:0)
+                           ->order_by('article.id', 'desc')
+                           ->limit(intval($count), intval($start))
+                           ->get('article');
+        //$query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
+        $ret_arr = $query->result();
         return $ret_arr;
     }
     

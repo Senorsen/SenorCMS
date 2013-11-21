@@ -4,6 +4,7 @@ function c_osulist($list_obj)
     this.scrollVelocity = 20;
     this.scrHeight = $(window).height();
     this.$list_obj = $list_obj;
+    this.$list_oi
     this.initListLayer();
     this.refreshView(this.$list_obj);
 };
@@ -22,10 +23,12 @@ c_osulist.prototype.initListLayer = function() {
         
     }).mousewheel(function(event, delta, deltaX, deltaY) {
         $(this).scrollTop($(this).scrollTop() - deltaY * _this.scrollVelocity * 1.5);
-    });
+    }).children('.list-btn').click(function() {
+        _this.applyScroll($(this).attr(parseInt('x-data-scroll-dir')));
+    }).end();
 };
-c_osulist.prototype.btnScroll = function(direction) {
-    this.$list_obj.stop(true, false).animate({});
+c_osulist.prototype.applyScroll = function(direction) {
+    this.$list_obj.stop(true, false).animate({scrollTop: "+=" + (direction * this.scrollVelocity)});
 };
 c_osulist.prototype.refreshView = function($o) {
     var _this = this;
@@ -72,6 +75,6 @@ c_osulist.prototype.setCallback = function(callback) {
 };
 c_osulist.prototype.addList = function(html) {
     var $obj = $(html);
-    this.$list_obj.children().append($obj);
+    this.$list_obj.children('.list-layer-i').append($obj);
     this.refreshView(this.$list_obj);
 };

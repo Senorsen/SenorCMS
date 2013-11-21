@@ -24,14 +24,32 @@ body {
     height: 100%;
     z-index: 50;
     right: @list-layer-right;
+    .list-btn {
+        position: fixed;
+        width: 350px;
+        height: 60px;
+        right: 0px;
+        right: -400px;
+        margin-left: auto;
+        margin-right: 3px;
+        background-color: rgba(0,0,0,0.7);
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .list-btn-up {
+        top: 50px;
+    }
+    .list-btn-down {
+        bottom: 30px;
+    }
+    .list-layer-i {
+        position: relative;
+        height: 100%;
+        margin-top: 200px;
+        margin-bottom: 80px;
+    }
 }
 
-.list-layer-i {
-    position: relative;
-    height: 100%;
-    margin-top: 200px;
-    margin-bottom: 80px;
-}
 
 .article-button {
     display: block;
