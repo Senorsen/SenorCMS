@@ -33,25 +33,26 @@ c_osulist.prototype.applyScroll = function(direction) {
 c_osulist.prototype.refreshView = function($o) {
     var _this = this;
     var $ab_o = $o.find('.article-button');
+    var r_out = -50, r_in = -120, r_hov = -70;
     $ab_o.hover(function() {
         if ($(this).hasClass('onsel')) return;
         if (!_this.on_sel)
         {
-            $(this).removeClass('hov').stop(true, false).animate({right: -50}, 200, "swing");
+            $(this).removeClass('hov').stop(true, false).animate({right: r_hov}, 200, "swing");
         }
         else
         {
-            $(this).removeClass('hov').stop(true, false).animate({right: -100}, 200, "swing");
+            $(this).removeClass('hov').stop(true, false).animate({right: r_hov}, 200, "swing");
         }
     }, function() {
         if ($(this).hasClass('onsel')) return;
         if (!_this.on_sel)
         {
-            $(this).removeClass('hov').stop(true, false).animate({right: -100}, 200, "swing");
+            $(this).removeClass('hov').stop(true, false).animate({right: r_in}, 200, "swing");
         }
         else
         {
-            $(this).removeClass('hov').stop(true, false).animate({right: -160}, 200, "swing");
+            $(this).removeClass('hov').stop(true, false).animate({right: r_in}, 200, "swing");
         }
     }).click(function(e) {
         e.stopPropagation();
@@ -61,14 +62,14 @@ c_osulist.prototype.refreshView = function($o) {
         $ab_o.each(function() {
             if (this.id != this_button_id)
             {
-                $(this).removeClass('onsel').animate({right: -160});
+                $(this).removeClass('onsel').animate({right: r_in});
             }
         });
         console.log($o.scrollTop()+' '+$(this).offset().top);
-        $(this).addClass('onsel').animate({right: -40});
-        $o.animate({scrollTop: $(this).offset().top},400);
+        $(this).addClass('onsel').animate({right: r_out});
+        $o.animate({scrollTop: $(this).position().top},400);
         _this.sel_callback(JSON.parse(decodeURIComponent($(this).attr('x-dataarea-json'))));
-    }).animate({right: -100}, 60);
+    }).animate({right: r_in}, 60);
 };
 c_osulist.prototype.setCallback = function(callback) {
     this.sel_callback = callback;

@@ -1,5 +1,5 @@
     <div id="top-layer">
-        <a href="https://login.senorsen.com">登录</a>
+        
     </div>
     <div id="list-layer" class="list-layer">
         <div class="list-layer-i">
