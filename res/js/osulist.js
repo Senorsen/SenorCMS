@@ -18,14 +18,21 @@ c_osulist.prototype = {
 c_osulist.prototype.initListLayer = function() {
     var _this = this;
     this.$list_obj.hover(function() {
-        
+        $(this).find('.list-btn-up').fadeIn();
+        $(this).find('.list-btn-down').fadeIn();
     }, function() {
-        
+        $(this).find('.list-btn-up').fadeOut()
+        $(this).find('.list-btn-down').fadeOut();
     }).mousewheel(function(event, delta, deltaX, deltaY) {
         $(this).scrollTop($(this).scrollTop() - deltaY * _this.scrollVelocity * 1.5);
     }).children('.list-btn').click(function() {
         _this.applyScroll($(this).attr(parseInt('x-data-scroll-dir')));
     }).end();
+    $('.list-btn').click(function(e) {
+        e.preventDefault();
+        var dir = parseInt($(this).attr('data-scroll-dir'));
+        $list_obj.animate({scrollTop: dir * _this.scrollVelocity});
+    });
 };
 c_osulist.prototype.applyScroll = function(direction) {
     this.$list_obj.stop(true, false).animate({scrollTop: "+=" + (direction * this.scrollVelocity)});

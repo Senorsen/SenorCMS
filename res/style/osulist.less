@@ -9,6 +9,7 @@
 @list-layer-dispwidth: 400px;
 @list-layer-right: 0px;
 @list-layer-rrcat: 20px;
+@top-layer-height: 120px;
 
 body {
     overflow: hidden;
@@ -24,12 +25,13 @@ body {
     height: 100%;
     z-index: 50;
     right: @list-layer-right;
+    
     .list-btn {
+        display: none;
         position: fixed;
         width: 350px;
         height: 60px;
-        right: 0px;
-        right: -400px;
+        right: 5px;
         margin-left: auto;
         margin-right: 3px;
         background-color: rgba(0,0,0,0.7);
@@ -37,7 +39,7 @@ body {
         cursor: pointer;
     }
     .list-btn-up {
-        top: 50px;
+        top: @top-layer-height+50px;
     }
     .list-btn-down {
         bottom: 30px;
