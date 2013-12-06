@@ -34,12 +34,12 @@ body {
         right: 5px;
         margin-left: auto;
         margin-right: 3px;
-        background-color: rgba(0,0,0,0.7);
+        background-color: rgba(0,0,0,0.6);
         border-radius: 5px;
         cursor: pointer;
     }
     .list-btn-up {
-        top: @top-layer-height+50px;
+        top: @top-layer-height+30px;
     }
     .list-btn-down {
         bottom: 30px;
@@ -139,4 +139,33 @@ body {
     width: 100%;
     height: 120px;
     background-color: rgba(0,0,0,0.95);
+}
+
+#article-layer {
+    display: block;
+    position: absolute;
+    overflow: hidden;
+    z-index: 300;
+    right: 450px;
+    left: 50px;
+    top: 200px;
+    bottom: 30px;
+    background-color: rgba(255,255,255,0.9);
+    border: solid 1px rgba(0,0,0,0.8);
+    border-radius: 4px;
+    box-shadow: inset 10px 50px 60px rgba(0,0,0,0.1), 0px 0px 7px rgba(0,0,0,0.8);
+    
+    .article-title {
+        display: block;
+        font-size: 26px;
+        margin-left: 40px;
+        margin-top: 25px;
+        margin-bottom: 5px;
+        overflow: hidden;
+    }
+    .article-author,.article-date,.article-category {
+        margin-left: 30px;
+        font-size: 16px;
+        overflow: hidden;
+    }
 }

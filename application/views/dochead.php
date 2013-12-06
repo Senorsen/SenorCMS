@@ -12,6 +12,7 @@
 <script src="<?php echo base_url();?>res/lib/jquery.mousewheel.js" type="text/javascript"></script>
 <script src="<?php echo base_url();?>res/js/model.js" type="text/javascript"></script>
 <script src="<?php echo base_url();?>res/js/osulist.js" type="text/javascript"></script>
+<script src="<?php echo base_url();?>res/js/article.js" type="text/javascript"></script>
 <script src="<?php echo base_url();?>res/js/view.js" type="text/javascript"></script>
 <script src="<?php echo base_url();?>res/js/controller.js" type="text/javascript"></script>
 

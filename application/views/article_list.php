@@ -24,11 +24,11 @@
         <div class="list-btn list-btn-down" data-scroll-dir="1"></div>
     </div>
     <div id="article-layer" class="article-layer">
-        <div id="article-layer-i" class="article-layer-i">
-        </div>
-    </div>
-    <div id="preview-layer" class="preview-layer">
-        <div id="preview-layer-i" class="preview-layer-i">
+        <span class="article-title">测试一</span>
+        <span class="article-author">作者：张森</span>
+        <span class="article-date">日期：2013年12月6日11:39:07</span>
+        <span class="article-category">分类：个人日志</span>
+        <div class="article-layer-i">
         </div>
     </div>
     
