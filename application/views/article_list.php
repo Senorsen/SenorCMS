@@ -4,6 +4,7 @@
     <div id="list-layer" class="list-layer">
         <div class="list-layer-i">
 <!-- Article inner listlayer content start - Senorsen capture -->
+<script></script>
 <?php
     foreach ($list as $value)
     {

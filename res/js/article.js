@@ -6,7 +6,7 @@ function c_article($article_layer)
 }
 
 c_article.prototype = {
-    
+    controller_callback: function() {}
 };
 c_article.prototype.articleViewInit = function() {
     $article_layer = this.$article_layer;
@@ -32,6 +32,7 @@ c_article.prototype.prepareArticle = function(obj) {
         children('.article-date').text(date);
         children('.article-category').text(category);
     }
+    
     $article_layer.css({
         display: 'block',
         right: 450,
