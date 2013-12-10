@@ -12,6 +12,7 @@ class Article_model extends CI_Model {
     {
         $start = $page * $count;
         $this->load->database();
+        /*
         $sql = "SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`, `a`.`author` AS `author_id`,
                        `l`.`category_id`, `d`.`short_name`, `d`.`full_name`
                 FROM `tb_article` AS `a`
@@ -20,7 +21,7 @@ class Article_model extends CI_Model {
                   LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id`
                 WHERE (`a`.`hidden`<=?)
                 ORDER BY `a`.`id` DESC LIMIT ?,? ";
-                
+        */
         $query = $this->db->select('article.id, article.title, article.pubdate, article.sort,
                                     user.username AS author_name,
                                     category_link.category_id, category_def.short_name, category_def.full_name')
@@ -40,10 +41,11 @@ class Article_model extends CI_Model {
     {
         $start = $page * $count;
         $this->load->database();
-        $sql = " SELECT `c`.`cat_descendants`,`d`.`full_name` AS `category_name` FROM `tb_category_cache` AS `c` "
-              ." LEFT JOIN `tb_category_def` AS `d` ON `c`.`cat_self`=`d`.`id` "
-              ." WHERE `c`.`cat_self` in "
-              ." (SELECT `id` FROM `tb_category_def` WHERE `short_name`=?)";
+        $sql = "SELECT `c`.`cat_descendants`,`d`.`full_name` AS `category_name` 
+                FROM ".$this->db->dbprefix('category_cache')." AS `c` 
+                  LEFT JOIN ".$this->db->dbprefix('category_def')." AS `d` ON `c`.`cat_self`=`d`.`id` 
+                WHERE `c`.`cat_self` in 
+                  (SELECT `id` FROM ".$this->db->dbprefix('category_def')." WHERE `short_name`=?)";
         try {
             $r_cache = $this->db->query($sql, array($category))->first_row();
             if ($r_cache != false)
@@ -59,14 +61,19 @@ class Article_model extends CI_Model {
             $org_ids = "";
         }
         if ($org_ids == "") return array();
-        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`, "
-              ." `a`.`author` AS `author_id`, `l`.`category_id`,`d`.`short_name`,`d`.`full_name` "
-              ." FROM `tb_article` AS `a` LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` "
-              ." LEFT JOIN `tb_category_link` AS `l` ON `l`.`article_id`=`a`.`id` "
-              ." LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id` "
-              ." WHERE (`a`.`hidden`=0 or `a`.`hidden`<=?) AND `a`.`id` in /* A MUST GO AHEAD */ "
-              ." (SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in "
-              ." ( $org_ids ) ) GROUP BY `a`.`id` ORDER BY `a`.`id` DESC LIMIT ?,? ";
+        $sql = "SELECT `a`.`id`,`a`.`title`,`a`.`pubdate`,`a`.`sort`,`u`.`username` AS `author`, 
+                        `a`.`author` AS `author_id`, `l`.`category_id`,`d`.`short_name`,`d`.`full_name` 
+                FROM `tb_article` AS `a` 
+                  LEFT JOIN `tb_user` AS `u` ON `a`.`author`=`u`.`id` 
+                  LEFT JOIN `tb_category_link` AS `l` ON `l`.`article_id`=`a`.`id` 
+                  LEFT JOIN `tb_category_def` AS `d` ON `l`.`category_id`=`d`.`id` 
+                WHERE (`a`.`hidden`=0 or `a`.`hidden`<=?) AND 
+                      `a`.`id` in /* A MUST GO AHEAD */ 
+                        (SELECT `article_id` FROM `tb_category_link` WHERE `category_id` in 
+                          ( $org_ids ) ) 
+                GROUP BY `a`.`id` 
+                ORDER BY `a`.`id` DESC 
+                LIMIT ?,? ";
         //$sql = "SELECT a.id, a.title, a.pubdate, a.sort, u.username AS author, a.author AS author_id, l.category_id, d.short_name, d.full_name FROM tb_article AS a, tb_user AS u, tb_category_link AS l, tb_category_def AS d WHERE a.hidden<=? AND a.id=";
         $query = $this->db->query($sql, array($show_hidden?1:0, intval($start), intval($count)));
         $ret_arr = array();
@@ -84,8 +91,8 @@ class Article_model extends CI_Model {
             $category_short_name = '';
         }
         $this->load->database();
-        $sql = "SELECT `id`,`short_name` FROM `tb_category_def` WHERE (`id`=? OR `short_name`=?)";
-        $row = $this->db->query($sql, array(intval($category_id), $category_short_name))->first_row();
+        $this->db->select('id, short_name')->where('id=', $category_id)->or_where('short_name', $category_short_name);
+        $row = $this->db->get('category_def')->first_row();
         if ($row == false || count($row) == 0)
         {
             return false;
@@ -107,14 +114,14 @@ class Article_model extends CI_Model {
         {
             $q_arr = array($id, 1);
         };
-        $sql = " SELECT `a`.`id`,`a`.`title`,`a`.`content`,`a`.`pubdate`,`a`.`author` AS `author_id`, "
-              ." `a`.`sort`,`a`.`hidden`,`a`.`click_count`,`u`.`username` AS `author`, "
-              ." `d`.`short_name` AS `cat_short`,`d`.`full_name` AS `category`,`d`.`id` AS `category_id` "
-              ." FROM `tb_article` AS `a` "
-              ." LEFT OUTER JOIN `tb_user` AS `u` ON `u`.`id`=`a`.`author` "
-              ." LEFT OUTER JOIN `tb_category_link` AS `l` ON `a`.`id`=`l`.`article_id` "
-              ." LEFT OUTER JOIN `tb_category_def` AS `d` ON `d`.`id`=`l`.`category_id` "
-              ." WHERE `a`.`id`=? AND `a`.`hidden`<=? ";
+        $sql = "SELECT `a`.`id`,`a`.`title`,`a`.`content`,`a`.`pubdate`,`a`.`author` AS `author_id`, 
+                       `a`.`sort`,`a`.`hidden`,`a`.`click_count`,`u`.`username` AS `author`, 
+                       `d`.`short_name` AS `cat_short`,`d`.`full_name` AS `category`,`d`.`id` AS `category_id` 
+                FROM ".$this->db->dbprefix('article')." AS `a` 
+                  LEFT JOIN ".$this->db->dbprefix('user')." AS `u` ON `u`.`id`=`a`.`author` 
+                  LEFT JOIN ".$this->db->dbprefix('category_link')." AS `l` ON `a`.`id`=`l`.`article_id` 
+                  LEFT JOIN ".$this->db->dbprefix('category_def')." AS `d` ON `d`.`id`=`l`.`category_id` 
+                WHERE `a`.`id`=? AND `a`.`hidden`<=? ";
         $query = $this->db->query($sql, $q_arr);
         $row = $query->result();
         if (!$row)
@@ -136,8 +143,8 @@ class Article_model extends CI_Model {
         global $cat_tree;
         global $cat_res;
         $this->load->database();
-        $this->db->query('TRUNCATE TABLE `tb_category_cache`');
-        $query = $this->db->query('SELECT `category_id`,`child_id` FROM `tb_category_map` WHERE 1');
+        $this->db->truncate('category_cache');
+        $query = $this->db->select('category_id, child_id')->get('category_map');
         $cat_tree = array();
         $cat_res = array();
         $cat_par = array();
@@ -154,7 +161,7 @@ class Article_model extends CI_Model {
             echo $key;
             $this_res = $this->_work_cache_category($key);
             $this_val = implode(",", $this_res);
-            $sql = "INSERT INTO `tb_category_cache` (`cat_self`,`cat_descendants`) VALUES ($key,'$this_val');\n";
+            $sql = "INSERT INTO ".$this->db->dbprefix('category_cache')." (`cat_self`,`cat_descendants`) VALUES ($key,'$this_val');\n";
             $this->db->query($sql);
         }
         return $sql;

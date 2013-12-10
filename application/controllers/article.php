@@ -87,7 +87,12 @@ class Article extends CI_Controller {
             echo json_encode($json);
         }
     }
-    
+    /**
+     * 显示一篇文章
+     * @param  integer  $id   文章id
+     * @param  integer $ajax 是否为ajax，默认为否
+     * @return json        [description]
+     */
     public function disp($id, $ajax = 0)
     {
         $id = intval($id);

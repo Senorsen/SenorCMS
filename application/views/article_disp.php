@@ -8,5 +8,5 @@
         </div>
     </div>
     <script>
-        location.href = '<?php echo base_url();?>/#!Article/<?php echo $id;?>';
+        location.href = base_url('#!/article/<?php echo $id;?>');
     </script>
