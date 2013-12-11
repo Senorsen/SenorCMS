@@ -14,6 +14,7 @@ c_model.prototype = {
         "getList": "article/category"
     },
 };
+
 /**
  * 通过相应接口获得数据
  * @param  {string} interface 
