@@ -10,10 +10,32 @@ function c_model()
 };
 c_model.prototype = {
     url: {
-        "getArticle": "article/disp",
-        "getList": "article/category"
+        "getArticle": ["article/disp", 1],
+        "getList": ["article/category", 1]
     },
+    data_handler: {
+        "getArticle": [["id"], []],
+        "getList": [["category", "page"], []]
+    }
 };
+
+c.model.prototype.data_handle = function(type, args) {
+    var is_ajax = 1;
+    var arg_get = [], arg_post = [];
+    // handle GET data
+    for (var i in this.data_handler[0]) {
+        //假定参数一定存在，必须存在，有存在的义务
+        var this_key = this.data_handler[0][i];
+        arg_get.push(args[this_key]);
+    }
+    // handle POST data
+    for (var i in this.data_handler[1]) {
+        var this_key = this.data_handler[1][i];
+        arg_post.push(args[this_key]);
+    }
+    var get_url = arg_get.join('/');
+    return {get: get_url, post: arg_post, fr: this.url[type][1]};
+}
 /**
  * 通过相应接口获得数据
  * @param  {string} interface 
@@ -40,8 +62,8 @@ c_model.prototype.fetch = function(interface, getarg, postdata, force_refresh, c
         getarg = [];
     }
     callback = (typeof callback == 'function')?callback:(typeof force_refresh == 'function'?force_refresh:(typeof postdata == 'function'?postdata:(typeof getarg == 'function'?getarg:function() {})));
-    var url = url_prefix+this.url[interface]+'/'+getarg.join('/');
-    var method = (typeof postdata == 'undefined') ? 'GET' : 'POST';
+    var url = url_prefix+this.url[interface][0]+'/'+getarg.join('/');
+    var method = (typeof postdata == 'undefined' || postdata == []) ? 'GET' : 'POST';
     $.ajax({
         url: url,
         type: method,
@@ -59,4 +81,4 @@ c_model.prototype.fetch = function(interface, getarg, postdata, force_refresh, c
         console.log("complete");
     });
     
-}
+};
