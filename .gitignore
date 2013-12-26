@@ -1,5 +1,5 @@
 .DS_Store
-
+_notes
 application/cache/*
 !application/cache/index.html
 !application/cache/.htaccess
