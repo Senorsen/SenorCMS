@@ -1,3 +1,4 @@
+<script>alert('未完成，进度缓慢，可能会在寒假结束前完成次此网站制作。目前暂时使用wordpress博客，http://blog.senorsen.com ~谢谢光临');</script>
     <div id="top-layer">
         
     </div>
