@@ -1,9 +1,11 @@
+<script>alert('未完成，进度缓慢，可能会在寒假结束前完成此网站制作，手机版在电脑版之后。目前暂时使用wordpress博客，http://blog.senorsen.com ~谢谢光临');</script>
     <div id="top-layer">
-        <a href="https://login.senorsen.com">登录</a>
+        
     </div>
     <div id="list-layer" class="list-layer">
         <div class="list-layer-i">
 <!-- Article inner listlayer content start - Senorsen capture -->
+<script></script>
 <?php
     foreach ($list as $value)
     {
@@ -24,11 +26,11 @@
         <div class="list-btn list-btn-down" data-scroll-dir="1"></div>
     </div>
     <div id="article-layer" class="article-layer">
-        <div id="article-layer-i" class="article-layer-i">
-        </div>
-    </div>
-    <div id="preview-layer" class="preview-layer">
-        <div id="preview-layer-i" class="preview-layer-i">
+        <span class="article-title">测试一</span>
+        <span class="article-author">作者：张森</span>
+        <span class="article-date">日期：2013年12月6日11:39:07</span>
+        <span class="article-category">分类：个人日志</span>
+        <div class="article-layer-i">
         </div>
     </div>
     
