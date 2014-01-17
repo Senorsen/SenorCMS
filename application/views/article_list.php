@@ -1,4 +1,4 @@
-<script>alert('未完成，进度缓慢，可能会在寒假结束前完成此网站制作，手机版在电脑版之后。目前暂时使用wordpress博客，http://blog.senorsen.com ~谢谢光临');</script>
+<script>alert('未完成，进度缓慢，可能会在寒假结束前完成此网站制作，手机版在电脑版之后。\n可能考虑放弃osulist.js\n目前暂时使用wordpress博客，http://blog.senorsen.com ~谢谢光临');</script>
     <div id="top-layer">
         
     </div>
