@@ -19,7 +19,7 @@ c_model.prototype = {
     }
 };
 
-c.model.prototype.data_handle = function(type, args) {
+c_model.prototype.data_handle = function(type, args) {
     var is_ajax = 1;
     var arg_get = [], arg_post = [];
     // handle GET data
